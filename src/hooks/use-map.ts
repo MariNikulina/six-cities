@@ -3,10 +3,12 @@ import {City} from '../types/offers';
 import {Map, TileLayer} from 'leaflet';
 
 function useMap (mapRef: MutableRefObject<HTMLElement | null>, city: City): Map | null {
+
   const [map, setMap] = useState<Map | null>(null);
+  const isRenderedRef = useRef<boolean>(false);
 
   useEffect(() => {
-    if(mapRef.current !== null && map === null) {
+    if(mapRef.current !== null && !isRenderedRef.current) {
 
       const instanse = new Map(mapRef.current, {
         center: {
@@ -26,9 +28,10 @@ function useMap (mapRef: MutableRefObject<HTMLElement | null>, city: City): Map 
 
       instanse.addLayer(layer);
 
-      setMap((_) => instanse);
-
+      setMap(instanse);
+      isRenderedRef.current = true;
     }
+
   }, [mapRef, map, city]);
 
   return map;

@@ -1,15 +1,19 @@
 import 'leaflet/dist/leaflet.css';
 import {useEffect, useRef} from 'react';
-import {OffersCard, City} from '../../types/offers';
+import {City, LocationMap} from '../../types/offers';
 import useMap from '../../hooks/use-map';
 import {Icon, Marker} from 'leaflet';
+import {CityLocation} from "../../const";
 
 type MapProps = {
-  offers: OffersCard;
   city: City;
+  locations: LocationMap[];
+  activeOffer: number | null;
+  place?: 'cities' | 'property';
 };
 
-function Map({offers, city}: MapProps): JSX.Element {
+function Map({ place = 'cities', city, locations, activeOffer}: MapProps): JSX.Element {
+
   const mapRef = useRef(null);
   const map = useMap(mapRef, city);
 
@@ -26,32 +30,40 @@ function Map({offers, city}: MapProps): JSX.Element {
   });
 
   useEffect(() => {
+    const markers: Marker[] = [];
     if (map) {
-      offers.forEach((offer) => {
+      locations.forEach((offer) => {
         const marker = new Marker({
-          lat: offer.location.latitude,
-          lng: offer.location.longitude,
+          lat: offer.latitude,
+          lng: offer.longitude,
         });
 
         marker
-          .setIcon(defaultCustomIcon)
+          .setIcon(offer.id === activeOffer ? currentCustomIcon : defaultCustomIcon)
           .addTo(map);
+
+        markers.push(marker);
       });
+
+      const {latitude: lat, longitude: lng, zoom } = CityLocation[city.name];
+
+      map.setView({lat, lng}, zoom);
     }
-  }, [map, offers]);
+
+    return () => {
+      if (map) {
+        markers.forEach((marker) => {
+          map.removeLayer(marker);
+        })
+      }
+    }
+  }, [map, locations, city, activeOffer]);
 
   return (
-    <div
-      style={{height: '100%'}}
+    <section
+      className={`${place}__map map`}
       ref={mapRef}
-    >
-    </div>
-    // <section
-    //   className="cities__map map"
-    //   style={{height: '540px'}}
-    //   ref={mapRef}
-    //   >
-    // </section>
+    />
   );
 }
 

@@ -1,29 +1,51 @@
-import {Link} from 'react-router-dom';
 import {OfferCard} from '../../types/offers';
-import {AppRoute} from '../../const';
-import {CardClassNamesEnum, FavoriteClassNamesEnum} from '../../types/classNames';
-import {FavoritesClassName} from '../../const';
+import {MainClassNamesEnum, FavoriteClassNamesEnum, PropertyClassNameEnum} from '../../types/classNames';
+import {FavoritesClassName, AppRoute} from '../../const';
+import {useAppDispatch} from "../../hooks";
+import { setActiveOffer } from '../../store/site-process/site-process';
+import {fetchComments, fetchDetailedInfoAction, fetchOffersNearbyAction} from "../../store/api-actions";
+import {getStarsWidth} from "../../utils";
+import { redirectToRoute } from '../../store/action';
 
 type OfferCardProps = {
-  onMouseMove: (id: number) => void;
-  onMouseLeave: () => void;
+  // onMouseMove: (id: number) => void;
+  // onMouseLeave: () => void;
   offer: OfferCard;
-  classNames: CardClassNamesEnum | FavoriteClassNamesEnum;
+  classNames: MainClassNamesEnum | FavoriteClassNamesEnum | PropertyClassNameEnum;
 }
 
-function Card ({onMouseMove = () => void 0, onMouseLeave = () => void 0, offer, classNames = FavoritesClassName}: OfferCardProps): JSX.Element {
+function Card ({ offer, classNames = FavoritesClassName}: OfferCardProps): JSX.Element {
   const {id, isFavorite, isPremium, previewImage, price, rating, title, type} = offer;
-  const ratingStyle = rating * 20;
+
+  const dispatch = useAppDispatch();
 
   const handleMouseMove = () => {
-    onMouseMove(id);
+    dispatch(setActiveOffer(id));
   };
+
+  const handleMouseLeave = () => {
+    dispatch(setActiveOffer(null));
+  };
+
+  const handleTitleClick = async () => {
+    const resultDetailedInfoAction = await dispatch(fetchDetailedInfoAction(id));
+    if (fetchDetailedInfoAction.fulfilled.match(resultDetailedInfoAction)) {
+      dispatch(fetchOffersNearbyAction(id));
+      dispatch(fetchComments(id));
+    } else {
+      if (resultDetailedInfoAction.payload) {
+        dispatch(redirectToRoute(AppRoute.NotExist))
+      }
+    }
+    
+  }
 
   return (
     <article
       className={`${classNames.Article}card place-card`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={onMouseLeave}
+      onMouseEnter={handleMouseMove}
+      // onMouseLeave={onMouseLeave}
+      onMouseLeave={handleMouseLeave}
     >
       {isPremium && (
         <div className="place-card__mark">
@@ -52,12 +74,13 @@ function Card ({onMouseMove = () => void 0, onMouseLeave = () => void 0, offer, 
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{width: `${ratingStyle}%`}}></span>
+            <span style={{width: getStarsWidth(rating)}}></span>
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <h2 className="place-card__name">
-          <Link to={`${AppRoute.Room}/${id}`}>{title}</Link>
+        <h2 className="place-card__name" onClick={handleTitleClick}>
+          {/*<Link to={`${AppRoute.Room}/${id}`}>{title}</Link>*/}
+          <a>{title}</a>
         </h2>
         <p className="place-card__type">{type}</p>
       </div>

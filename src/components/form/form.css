@@ -1,0 +1,11 @@
+.form__submit_disabled-false {
+  background-color: #4481c3;
+}
+
+.form__submit_disabled-true {
+  background-color: #c7c7c7;
+}
+
+/*.form__submit:enabled {*/
+/*  background-color: #4481c3;*/
+/*}*/

@@ -1,5 +1,5 @@
-import {Route, BrowserRouter, Routes} from 'react-router-dom';
-import {AppRoute, AuthorizationStatus} from '../../const';
+import {Route, Routes} from 'react-router-dom';
+import {AppRoute} from '../../const';
 import MainPageScreen from '../../pages/main-page-screen/main-page-screen';
 import FavoritesScreen from '../../pages/favorites-screen/favorites';
 import LoginScreen from '../../pages/login-screen/login-screen';
@@ -9,6 +9,13 @@ import PrivateRoute from '../private-route/private-route';
 import Layout from '../layout/layout';
 import {Reviews} from '../../types/review';
 import {City, OffersCard} from '../../types/offers';
+import {useAppSelector} from "../../hooks";
+import {isCheckedAuth} from "../../utils";
+import LoadingScreen from "../../pages/loading-screen/loading-screen";
+import HistoryRouter from "../history-route/history-route";
+import browserHistory from "../../browser-history";
+import { getAuthorizationStatus } from '../../store/user-process/selectors';
+import { getOffersLoadingStatus } from '../../store/site-data/selectors';
 
 type AppScreenProps = {
   offers: OffersCard;
@@ -17,9 +24,19 @@ type AppScreenProps = {
 };
 
 function App({offers, reviews, city}: AppScreenProps): JSX.Element {
+  // const {authorizationStatus, isOffersLoading} = useAppSelector((state) => state);
+
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isOffersLoading = useAppSelector(getOffersLoadingStatus);
+
+  if (isCheckedAuth(authorizationStatus) || isOffersLoading) {
+    return (
+      <LoadingScreen />
+    )
+  }
 
   return (
-    <BrowserRouter>
+    <HistoryRouter history={browserHistory}>
       <Routes>
         <Route
           path={AppRoute.Main}
@@ -27,7 +44,7 @@ function App({offers, reviews, city}: AppScreenProps): JSX.Element {
         >
           <Route
             index
-            element={<MainPageScreen offers={offers} city={city}/>}
+            element={<MainPageScreen />}
           />
           <Route
             path={AppRoute.Login}
@@ -35,18 +52,20 @@ function App({offers, reviews, city}: AppScreenProps): JSX.Element {
           />
           <Route
             path={`${AppRoute.Room}/:id`}
-            element={<PropertyScreen onReview={() => {
-              throw new Error('Function \'onReview\' isn\'t implemented.');
-            }}
+            element={<PropertyScreen
+              // onReview={() => {
+              // throw new Error('Function \'onReview\' isn\'t implemented.');
+              // }}
+              // offers={offers}
             />}
           />
           <Route
             path={AppRoute.Favorites}
             element={
               <PrivateRoute
-                authorizationStatus={AuthorizationStatus.Auth }
+                authorizationStatus={authorizationStatus}
               >
-                <FavoritesScreen offers={offers}/>
+                <FavoritesScreen />
               </PrivateRoute>
             }
           />
@@ -56,7 +75,7 @@ function App({offers, reviews, city}: AppScreenProps): JSX.Element {
           />
         </Route>
       </Routes>
-    </BrowserRouter>
+    </HistoryRouter>
 
   );
 }

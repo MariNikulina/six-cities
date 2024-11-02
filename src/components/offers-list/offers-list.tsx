@@ -1,33 +1,35 @@
 import Card from '../card/card';
 import {OffersCard} from '../../types/offers';
-import {useState} from 'react';
-import {CardClassName} from '../../const';
+import {MainClassName} from '../../const';
+import {MainClassNamesEnum, FavoriteClassNamesEnum, PropertyClassNameEnum} from "../../types/classNames";
 
 type OffersListProps = {
-  offersList: OffersCard;
+  listClassName?: MainClassNamesEnum | FavoriteClassNamesEnum | PropertyClassNameEnum;
+  offers: OffersCard;
 }
 
-function OffersList ({offersList}: OffersListProps): JSX.Element {
+function OffersList ({ listClassName = MainClassName, offers}: OffersListProps): JSX.Element {
 
-  const [activeOffer, setActiveOffer] = useState<number | null>(null);
+  // const { sorting: activeSorting } = useAppSelector((state) => state);
 
-  const handleCardMouseMove = (id: number) => {
-    setActiveOffer(id);
-  };
+  // const [activeOffer, setActiveOffer] = useState<number | null>(null);
 
-  const handleCardMouseLeave = () => {
-    setActiveOffer(null);
-  };
+  // const handleCardMouseMove = (id: number) => {
+  //   setActiveOffer(id);
+  // };
+  //
+  // const handleCardMouseLeave = () => {
+  //   setActiveOffer(null);
+  // };
 
   return (
-    <div className="cities__places-list places__list tabs__content">
-      {offersList.map((offer) => (<Card
+    <div className={listClassName?.List}>
+      {offers.map((offer) => (<Card
         key = {offer.id}
-        onMouseMove = {handleCardMouseMove}
-        onMouseLeave = {handleCardMouseLeave}
-        /*{...offer}*/
+        // onMouseMove = {handleCardMouseMove}
+        // onMouseLeave = {handleCardMouseLeave}
         offer = {offer}
-        classNames = {CardClassName}
+        classNames = {listClassName}
       />))}
     </div>
   );

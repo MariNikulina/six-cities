@@ -42,7 +42,7 @@ export const offers: OfferCard[] = [
       zoom: 8
     },
     maxAdults: 4,
-    previewImage: 'img/avatar-angelina.jpg',
+    previewImage: 'img/apartment-01.jpg',
     price: 120,
     rating: 4.8,
     title: 'Beautiful & luxurious studio at great location',
@@ -52,11 +52,11 @@ export const offers: OfferCard[] = [
     bedrooms: 4,
     city: {
       location: {
-        latitude: 52.370216,
-        longitude: 4.895168,
-        zoom: 10
+        latitude: 48.85661,
+        longitude: 2.351499,
+        zoom: 13
       },
-      name: 'Amsterdam'
+      name: 'Paris'
     },
     description: 'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
     goods: [
@@ -80,7 +80,7 @@ export const offers: OfferCard[] = [
       zoom: 8
     },
     maxAdults: 4,
-    previewImage: 'img/avatar-max.jpg',
+    previewImage: 'img/apartment-02.jpg',
     price: 190,
     rating: 4.8,
     title: 'Beautiful & luxurious studio at great location',
@@ -118,7 +118,7 @@ export const offers: OfferCard[] = [
       zoom: 8
     },
     maxAdults: 4,
-    previewImage: 'img/avatar-max.jpg',
+    previewImage: 'img/apartment-03.jpg',
     price: 210,
     rating: 4.8,
     title: 'Beautiful & luxurious studio at great location',

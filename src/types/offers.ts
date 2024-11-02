@@ -1,12 +1,19 @@
-export type City = {
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
-  name: string;
+import {cities, Sorting} from "../const";
+
+export type CityName = typeof cities[number];
+
+export type SortName = keyof typeof Sorting;
+
+export type Location = {
+  latitude: number;
+  longitude: number;
+  zoom: number;
 };
 
+export type City = {
+  location: Location;
+  name: CityName;
+};
 
 export type OfferCard = {
   bedrooms: number;
@@ -23,17 +30,16 @@ export type OfferCard = {
   images: [string];
   isFavorite: boolean;
   isPremium: boolean;
-  location: {
-    latitude: number;
-    longitude: number;
-    zoom: number;
-  };
+  location: Location;
   maxAdults: number;
   previewImage: string;
   price: number;
   rating: number;
   title: string;
-  type: string;
+  type: 'apartment' | 'room' | 'house' | 'hotel';
 }
 
+export type LocationMap = Pick<OfferCard, 'id'> & Location;
+
 export type OffersCard = OfferCard[];
+

@@ -1,13 +1,26 @@
-import {useState, ChangeEvent, Fragment, FormEvent} from 'react';
+import {useState, ChangeEvent, Fragment, FormEvent, useEffect} from 'react';
 import {Rating, STARS_COUNT} from '../../const';
+import {NewReview} from "../../types/review";
+import './form.css';
 
 type FormProps = {
-  onReview: (ratingOffer: number | null, text: string) => void;
+  onSubmit: (formData: NewReview) => void;
 }
 
-function Form ({onReview}: FormProps) {
+function Form ({onSubmit}: FormProps): JSX.Element {
   const [text, setText] = useState<string>('');
-  const [ratingOffer, setRatingOffer] = useState<number | null>(null);
+  const [ratingOffer, setRatingOffer] = useState<number>(0);
+  const [isValid, setIsValid] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
+  useEffect(() => {
+
+    if (text.length > 2 && ratingOffer !== 0) {
+      setIsValid(true);
+      return;
+    }
+    setIsValid(false);
+  }, [text, ratingOffer])
 
   const handleTextareaChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
@@ -24,7 +37,14 @@ function Form ({onReview}: FormProps) {
       method="post"
       onSubmit={(e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        onReview(ratingOffer, text);
+        setIsDisabled(true);
+        onSubmit({
+          comment: text,
+          rating: ratingOffer,
+        });
+        setText('');
+        setRatingOffer(0);
+        setIsDisabled(false);
       }}
     >
       <label className="reviews__label form__label" htmlFor="review">Your review</label>
@@ -40,6 +60,7 @@ function Form ({onReview}: FormProps) {
               onChange={handleInputChange}
               id={`${STARS_COUNT - i}-stars`}
               type="radio"
+              disabled={isDisabled}
             />
             <label htmlFor={`${STARS_COUNT - i}-stars`} className="reviews__rating-label form__rating-label" title={rating}>
               <svg className="form__star-image" width="37" height="33">
@@ -55,7 +76,10 @@ function Form ({onReview}: FormProps) {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={text}
-        onChange={handleTextareaChange}
+        onChange={(e) => handleTextareaChange(e)}
+        minLength={2}
+        maxLength={300}
+                disabled={isDisabled}
       >
       </textarea>
       <div className="reviews__button-wrapper">
@@ -63,7 +87,12 @@ function Form ({onReview}: FormProps) {
           To submit review please make sure to set <span className="reviews__star">rating</span> and
           describe your stay with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit" disabled>Submit</button>
+        <button
+          className={`reviews__submit form__submit button ${isValid  && !isDisabled ? 'form__submit_disabled-false' : 'form__submit_disabled-true'}`}
+          type="submit"
+          disabled={!isValid}
+          // disabled={isValid}
+        >Submit</button>
       </div>
     </form>
   );

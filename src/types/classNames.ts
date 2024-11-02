@@ -1,5 +1,7 @@
-import {CardClassName, FavoritesClassName} from '../const';
+import {MainClassName, FavoritesClassName, PropertyClassName} from '../const';
 
-export type CardClassNamesEnum = typeof CardClassName;
+export type MainClassNamesEnum = typeof MainClassName;
 
 export type FavoriteClassNamesEnum = typeof FavoritesClassName;
+
+export type PropertyClassNameEnum = typeof PropertyClassName;
