@@ -9,11 +9,11 @@ import PrivateRoute from '../private-route/private-route';
 import Layout from '../layout/layout';
 import {Reviews} from '../../types/review';
 import {City, OffersCard} from '../../types/offers';
-import {useAppSelector} from "../../hooks";
-import {isCheckedAuth} from "../../utils";
-import LoadingScreen from "../../pages/loading-screen/loading-screen";
-import HistoryRouter from "../history-route/history-route";
-import browserHistory from "../../browser-history";
+import {useAppSelector} from '../../hooks';
+import {isCheckedAuth} from '../../utils';
+import LoadingScreen from '../../pages/loading-screen/loading-screen';
+import HistoryRouter from '../history-route/history-route';
+import browserHistory from '../../browser-history';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import { getOffersLoadingStatus } from '../../store/site-data/selectors';
 
@@ -25,14 +25,13 @@ type AppScreenProps = {
 
 function App({offers, reviews, city}: AppScreenProps): JSX.Element {
   // const {authorizationStatus, isOffersLoading} = useAppSelector((state) => state);
-
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isOffersLoading = useAppSelector(getOffersLoadingStatus);
 
   if (isCheckedAuth(authorizationStatus) || isOffersLoading) {
     return (
       <LoadingScreen />
-    )
+    );
   }
 
   return (
@@ -52,12 +51,7 @@ function App({offers, reviews, city}: AppScreenProps): JSX.Element {
           />
           <Route
             path={`${AppRoute.Room}/:id`}
-            element={<PropertyScreen
-              // onReview={() => {
-              // throw new Error('Function \'onReview\' isn\'t implemented.');
-              // }}
-              // offers={offers}
-            />}
+            element={<PropertyScreen />}
           />
           <Route
             path={AppRoute.Favorites}

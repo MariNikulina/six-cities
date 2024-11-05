@@ -1,8 +1,8 @@
-import axios, {AxiosError, AxiosInstance, AxiosRequestConfig} from "axios";
-import {getToken} from "./token";
-import {StatusCodes} from "http-status-codes";
-import {AxiosResponse} from "axios";
-import {processErrorHandle} from "./process-error-handle";
+import axios, {AxiosError, AxiosInstance, AxiosRequestConfig} from 'axios';
+import {getToken} from './token';
+import {StatusCodes} from 'http-status-codes';
+import {AxiosResponse} from 'axios';
+import {processErrorHandle} from './process-error-handle';
 
 const StatusCodeMapping: Record<number, boolean> = {
   [StatusCodes.BAD_REQUEST]: true,
@@ -19,7 +19,7 @@ export const createApi = (): AxiosInstance => {
   const api = axios.create({
     baseURL: BACKEND_URL,
     timeout: REQUEST_TIMEOUT,
-  })
+  });
 
   api.interceptors.request.use(
     (config: AxiosRequestConfig) => {
@@ -31,7 +31,7 @@ export const createApi = (): AxiosInstance => {
 
       return config;
     }
-  )
+  );
 
   api.interceptors.response.use(
     (response) => response,
@@ -43,7 +43,7 @@ export const createApi = (): AxiosInstance => {
 
       throw error;
     }
-  )
+  );
 
   return api;
 };

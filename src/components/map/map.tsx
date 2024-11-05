@@ -3,7 +3,7 @@ import {useEffect, useRef} from 'react';
 import {City, LocationMap} from '../../types/offers';
 import useMap from '../../hooks/use-map';
 import {Icon, Marker} from 'leaflet';
-import {CityLocation} from "../../const";
+import {CityLocation} from '../../const';
 
 type MapProps = {
   city: City;
@@ -54,9 +54,9 @@ function Map({ place = 'cities', city, locations, activeOffer}: MapProps): JSX.E
       if (map) {
         markers.forEach((marker) => {
           map.removeLayer(marker);
-        })
+        });
       }
-    }
+    };
   }, [map, locations, city, activeOffer]);
 
   return (

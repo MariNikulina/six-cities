@@ -1,18 +1,19 @@
 import Form from '../../components/form/form';
-import ReviewsList from "../../components/reviews-list/reviews-list";
-import Map from "../../components/map/map";
-import OffersList from "../../components/offers-list/offers-list";
-import {OfferCard} from "../../types/offers";
-import {PropertyClassName, TypeHousing, AuthorizationStatus} from "../../const";
-import Header from "../../components/header/header";
-import {useAppDispatch, useAppSelector} from "../../hooks";
-import {getStarsWidth} from "../../utils";
-import {leaveComment} from "../../store/api-actions";
-import {NewReview} from "../../types/review";
+import ReviewsList from '../../components/reviews-list/reviews-list';
+import Map from '../../components/map/map';
+import OffersList from '../../components/offers-list/offers-list';
+import {OfferCard} from '../../types/offers';
+import {PropertyClassName, TypeHousing, AuthorizationStatus} from '../../const';
+import Header from '../../components/header/header';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {getStarsWidth} from '../../utils';
+import {leaveComment} from '../../store/api-actions';
+import {NewReview} from '../../types/review';
 import LoginScreen from '../login-screen/login-screen';
 import { getComments, getCommentsLoadingStatus, getDetailedOffers, getDetailedOffersLoadingStatus, getOffersNearby, getOffersNearbyLoadingStatus } from '../../store/site-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
-import { getActiveOffers, getCity } from '../../store/site-process/selectors';
+import { getCity } from '../../store/site-process/selectors';
+import Bookmark from '../../components/bookmark/bookmark';
 
 function PropertyScreen (): JSX.Element {
 
@@ -30,16 +31,14 @@ function PropertyScreen (): JSX.Element {
     description,
     id,
     location,
+    isFavorite,
   } = useAppSelector(getDetailedOffers);
-  
-  // } = useAppSelector((state) => state.detailedOfferInfo!);
 
   // const {authorizationStatus, offersNearby, comments, city, activeOffer, isDetailedOffersLoading, isCommentsLoading, isOffersNearbyLoading} = useAppSelector((state) => state);
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const offersNearby = useAppSelector(getOffersNearby);
   const comments = useAppSelector(getComments);
   const city = useAppSelector(getCity);
-  const activeOffer = useAppSelector(getActiveOffers);
   const isDetailedOffersLoading = useAppSelector(getDetailedOffersLoadingStatus);
   const isCommentsLoading = useAppSelector(getCommentsLoadingStatus);
   const isOffersNearbyLoading = useAppSelector(getOffersNearbyLoadingStatus);
@@ -49,12 +48,11 @@ function PropertyScreen (): JSX.Element {
   if (isDetailedOffersLoading) {
     return (
       <LoginScreen />
-    )
+    );
   }
 
-  const locations = offersNearby.map(({id, location}) => ({id, ...location}))
+  const locations = offersNearby.map(({id: nearbyId, location: nearbyLocation, }) => ({ id: nearbyId, ...nearbyLocation }));
   locations.push({id, ...location});
-  console.log(locations)
 
   function onFormSubmit (formData: NewReview) {
     dispatch(leaveComment({id, ...formData}));
@@ -87,19 +85,20 @@ function PropertyScreen (): JSX.Element {
               {isPremium &&
                 <div className="property__mark">
                   <span>Premium</span>
-                </div>
-              }
+                </div>}
 
               <div className="property__name-wrapper">
                 <h1 className="property__name">
                   {title}
                 </h1>
-                <button className="property__bookmark-button button" type="button">
+                {/* <button className="property__bookmark-button button" type="button">
                   <svg className="property__bookmark-icon" width="31" height="33">
                     <use xlinkHref="#icon-bookmark"></use>
                   </svg>
                   <span className="visually-hidden">To bookmarks</span>
-                </button>
+                </button> */}
+
+                <Bookmark id={id} isActive={isFavorite} place='property'/>
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
@@ -152,8 +151,7 @@ function PropertyScreen (): JSX.Element {
                   {host.isPro &&
                     <span className="property__user-status">
                       Pro
-                    </span>
-                  }
+                    </span>}
                 </div>
                 <div className="property__description">
                   <p className="property__text">
@@ -166,12 +164,10 @@ function PropertyScreen (): JSX.Element {
 
                 {isCommentsLoading ?
                   <LoginScreen /> :
-                  <ReviewsList reviews={comments}/>
-                }
+                  <ReviewsList reviews={comments}/>}
 
                 {authorizationStatus === AuthorizationStatus.Auth &&
-                  <Form onSubmit={onFormSubmit}/>
-                }
+                  <Form onSubmit={onFormSubmit}/>}
 
               </section>
             </div>
@@ -186,8 +182,7 @@ function PropertyScreen (): JSX.Element {
 
             {isOffersNearbyLoading ?
               <LoginScreen /> :
-              <OffersList listClassName={PropertyClassName} offers={offersNearby} />
-            }
+              <OffersList listClassName={PropertyClassName} offers={offersNearby} />}
 
           </section>
         </div>

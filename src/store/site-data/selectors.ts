@@ -1,11 +1,14 @@
-import { NameSpace } from "../../const";
-import { OfferCard, OffersCard } from "../../types/offers";
-import { Reviews } from "../../types/review";
-import { State } from "../../types/state";
+import { createSelector } from '@reduxjs/toolkit';
+import { NameSpace} from '../../const';
+import { OfferCard, OffersCard } from '../../types/offers';
+import { Reviews } from '../../types/review';
+import { State } from '../../types/state';
+import { filterOffers, Corparator } from '../../utils';
+import { getCity, getSorting } from '../site-process/selectors';
 
 export const getOffers = (state: State): OffersCard => state[NameSpace.SiteData].offers;
 
-export const getDetailedOffers = (state: State): OfferCard  => state[NameSpace.SiteData].detailedOfferInfo!;
+export const getDetailedOffers = (state: State): OfferCard => state[NameSpace.SiteData].detailedOfferInfo!;
 
 export const getOffersNearby = (state: State): OffersCard => state[NameSpace.SiteData].offersNearby;
 
@@ -18,3 +21,12 @@ export const getDetailedOffersLoadingStatus = (state: State): boolean => state[N
 export const getOffersNearbyLoadingStatus = (state: State): boolean => state[NameSpace.SiteData].isOffersNearbyLoading;
 
 export const getCommentsLoadingStatus = (state: State): boolean => state[NameSpace.SiteData].isCommentsLoading;
+
+export const getFavoriteOffers = (state: State): OffersCard => state[NameSpace.SiteData].favoriteOffers;
+
+export const getFavoriteOffersLoadingStatus = (state: State): boolean => state[NameSpace.SiteData].isFavoriteOffersLoading;
+
+export const selectOffers = createSelector(
+  [getOffers, getCity, getSorting],
+  (offers, city, sorting) => (filterOffers(city.name, offers).sort(Corparator[sorting]))
+);

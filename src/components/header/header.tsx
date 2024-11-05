@@ -1,21 +1,25 @@
-import {AppRoute, AuthorizationStatus} from "../../const";
-import {Link} from "react-router-dom";
-import { setUserData } from "../../store/user-process/user-process";
-import {useAppDispatch, useAppSelector} from "../../hooks";
-import {logoutAction} from "../../store/api-actions";
-import { getAuthorizationStatus, getUser } from "../../store/user-process/selectors";
+import {AppRoute, AuthorizationStatus} from '../../const';
+import {Link} from 'react-router-dom';
+import { setUserData } from '../../store/user-process/user-process';
+import {useAppDispatch, useAppSelector} from '../../hooks';
+import {fetchFavoriteOffers, logoutAction} from '../../store/api-actions';
+import { getAuthorizationStatus, getUser } from '../../store/user-process/selectors';
+import { redirectToRoute } from '../../store/action';
 
 function Header (): JSX.Element {
   // const {authorizationStatus, user} = useAppSelector((state) => state);
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const user = useAppSelector(getUser);
-  const state = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  console.log(state)
 
   function handleSignOutClick (): void {
     dispatch(logoutAction());
     dispatch(setUserData(''));
+  }
+
+  function handleEmailClick (): void {
+    dispatch(fetchFavoriteOffers());
+    dispatch(redirectToRoute(AppRoute.Login));
   }
 
   return (
@@ -35,7 +39,12 @@ function Header (): JSX.Element {
                   <Link className="header__nav-link header__nav-link--profile" to={`/${AppRoute.Favorites}`}>
                     <div className="header__avatar-wrapper user__avatar-wrapper">
                     </div>
-                    <span className="header__user-name user__name">{user}</span>
+                    <span
+                      className="header__user-name user__name"
+                      onClick={handleEmailClick}
+                    >
+                      {user}
+                    </span>
                   </Link>
                 </li>
                 <li className="header__nav-item" onClick={handleSignOutClick}>
@@ -62,7 +71,7 @@ function Header (): JSX.Element {
         </div>
       </div>
     </header>
-  )
+  );
 }
 
 export default Header;

@@ -1,8 +1,8 @@
-import {FormEvent, useRef} from "react";
-import {useAppDispatch} from "../../hooks";
-import {AuthData} from "../../types/auth-data";
-import {loginAction} from "../../store/api-actions";
-import { setUserData } from "../../store/user-process/user-process";
+import {FormEvent, useRef} from 'react';
+import {useAppDispatch} from '../../hooks';
+import {AuthData} from '../../types/auth-data';
+import {loginAction} from '../../store/api-actions';
+import { setUserData } from '../../store/user-process/user-process';
 
 function LoginScreen ():JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
@@ -13,7 +13,7 @@ function LoginScreen ():JSX.Element {
   function onSubmit (authData: AuthData) {
     dispatch(loginAction(authData));
     dispatch(setUserData(authData.email));
-  };
+  }
 
   function handleSubmit (evt: FormEvent<HTMLFormElement>): void {
     evt.preventDefault();
@@ -22,7 +22,7 @@ function LoginScreen ():JSX.Element {
       onSubmit({
         email: loginRef.current?.value,
         password: passwordRef.current?.value,
-      })
+      });
     }
   }
 

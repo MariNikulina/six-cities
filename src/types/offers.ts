@@ -1,4 +1,4 @@
-import {cities, Sorting} from "../const";
+import {cities, Sorting} from '../const';
 
 export type CityName = typeof cities[number];
 
@@ -42,4 +42,6 @@ export type OfferCard = {
 export type LocationMap = Pick<OfferCard, 'id'> & Location;
 
 export type OffersCard = OfferCard[];
+
+export type argChangeStatusFavoriteOffer = Pick<OfferCard, 'id'> & {status: 1|0}
 

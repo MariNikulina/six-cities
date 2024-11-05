@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {Provider} from "react-redux";
+import {Provider} from 'react-redux';
 import App from './components/app/app';
 import {city, offers} from './mock/offers';
 import {reviews} from './mock/reviews';
-import {store} from "./store";
-import ErrorMessage from "./components/error-message/error-message";
-import {checkAuthAction, fetchOffersAction} from "./store/api-actions";
+import {store} from './store';
+import ErrorMessage from './components/error-message/error-message';
+import {checkAuthAction, fetchOffersAction} from './store/api-actions';
 
-console.log('index')
 store.dispatch(fetchOffersAction());
 
 store.dispatch(checkAuthAction());

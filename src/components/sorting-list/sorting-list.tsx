@@ -1,6 +1,6 @@
-import {Sorting} from "../../const";
-import {useState} from "react";
-import {SortName} from "../../types/offers";
+import {Sorting} from '../../const';
+import {useState} from 'react';
+import {SortName} from '../../types/offers';
 
 
 type SortingListProps = {
@@ -25,24 +25,28 @@ function SortingList ({ onChange, activeSorting }: SortingListProps): JSX.Elemen
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by</span>
       <span className="places__sorting-type" tabIndex={0} onClick={handleToggleButtonClick}>
-                     {Sorting[activeSorting]}
+        {Sorting[activeSorting]}
         <svg className="places__sorting-arrow" width="7" height="4">
           <use xlinkHref="#icon-arrow-select"></use>
         </svg>
       </span>
-      {isOpened && (<ul className="places__options places__options--custom places__options--opened">
-        {(Object.entries(Sorting) as [SortName, string][]).map(([sortType, text]) => (
-          <li
-            key={sortType}
-            className={`places__option ${activeSorting === sortType ? 'places__option--active' : ''}`}
-            tabIndex={0}
-            onClick={() => handleSortItemClick(sortType)}
-          >{text}</li>
-        ))}
-      </ul>)}
+      {isOpened &&
+      (
+        <ul className="places__options places__options--custom places__options--opened">
+          {(Object.entries(Sorting) as [SortName, string][]).map(([sortType, text]) => (
+            <li
+              key={sortType}
+              className={`places__option ${activeSorting === sortType ? 'places__option--active' : ''}`}
+              tabIndex={0}
+              onClick={() => handleSortItemClick(sortType)}
+            >{text}
+            </li>
+          ))}
+        </ul>
+      )}
     </form>
 
-  )
+  );
 }
 
 export default SortingList;
