@@ -6,6 +6,7 @@ import Header from '../../components/header/header';
 import { getFavoriteOffers, getFavoriteOffersLoadingStatus, getOffers } from '../../store/site-data/selectors';
 import LoginScreen from '../login-screen/login-screen';
 import CardLiEmpty from '../../components/card-list-empty/card-list-empty';
+import Logo from '../../components/logo/logo';
 
 function FavoritesScreen (): JSX.Element {
 
@@ -20,6 +21,7 @@ function FavoritesScreen (): JSX.Element {
 
   return (
     <div className={`page ${isEmpty ? 'page--favorites-empty' : ''}`}>
+      
       <Header />
 
       <main className={`page__main page__main--favorites ${isEmpty ? 'page__main--favorites-empty' : ''}`}>
@@ -58,9 +60,9 @@ function FavoritesScreen (): JSX.Element {
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
-          <img className="footer__logo" src="img/logo.svg" alt="6 cities logo" width="64" height="33" />
-        </a>
+
+        <Logo place='footer' />
+        
       </footer>
     </div>
   );

@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {fetchFavoriteOffers, logoutAction} from '../../store/api-actions';
 import { getAuthorizationStatus, getUser } from '../../store/user-process/selectors';
 import { redirectToRoute } from '../../store/action';
+import Logo from '../logo/logo';
 
 function Header (): JSX.Element {
   // const {authorizationStatus, user} = useAppSelector((state) => state);
@@ -27,9 +28,9 @@ function Header (): JSX.Element {
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            <a className="header__logo-link header__logo-link--active">
-              <img className="header__logo" src="img/logo.svg" alt="6 cities logo" width="81" height="41" />
-            </a>
+            
+            <Logo />
+            
           </div>
           <nav className="header__nav">
 
