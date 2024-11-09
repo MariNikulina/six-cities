@@ -29,9 +29,6 @@ export const fetchOffersAction = createAsyncThunk<OffersCard, undefined, {
   'offers/fetchOffers',
   async (_arg, {extra: api}) => {
     const {data: offers} = await api.get<OffersCard>(APIRoute.Hostels);
-    // dispatch(setOffersLoadedStatus(true));
-    // dispatch(setOffers(offers));
-    // dispatch(setOffersLoadedStatus(false));
     return offers;
   },
 );
@@ -45,12 +42,6 @@ export const fetchDetailedInfoAction = createAsyncThunk<OfferCard, OfferCard['id
   async (id, {dispatch, extra: api, rejectWithValue}) => {
     try {
       const {data: offer} = await api.get<OfferCard>(`${APIRoute.Hostels}/${id}`);
-
-      // dispatch(setDetailedOffersLoadedStatus(true));
-      // dispatch(setDetailedOfferInfo(offer));
-      // dispatch(setDetailedOffersLoadedStatus(false));
-      // console.log(`${AppRoute.Room}/${id}`)
-      dispatch(redirectToRoute(`${AppRoute.Room}/${id}`));
       return offer;
     } catch (error) {
       const axiosError = error as AxiosError;
@@ -75,9 +66,6 @@ export const fetchOffersNearbyAction = createAsyncThunk<OffersCard, OfferCard['i
   'offers/fetchOffersNearby',
   async (id, {extra: api}) => {
     const {data: offersNearby} = await api.get<OffersCard>(`${APIRoute.Hostels}/${id}/nearby`);
-    // dispatch(setOffersNearbyLoadedStatus(true));
-    // dispatch(setOffersNearby(offersNearby))
-    // dispatch(setOffersNearbyLoadedStatus(false));
     return offersNearby;
   }
 );
@@ -90,9 +78,6 @@ export const fetchComments = createAsyncThunk<Reviews, OfferCard['id'], {
   'reviews/fetchReviews',
   async (id, {extra: api}) => {
     const {data: comments} = await api.get<Reviews>(`${APIRoute.Comments}/${id}`);
-    // dispatch(setCommentsLoadedStatus(true));
-    // dispatch(setComments(comments));
-    // dispatch(setCommentsLoadedStatus(false));
     return comments;
   }
 );
@@ -105,7 +90,6 @@ export const leaveComment = createAsyncThunk<Reviews, ArgPostReviewAction, {
   'review/leaveReview',
   async ({id, comment, rating}, {extra: api}) => {
     const {data: comments} = await api.post<Reviews>(`${APIRoute.Comments}/${id}`, {comment, rating});
-    // dispatch(setComments(comments));
     return comments;
   }
 );
@@ -147,20 +131,15 @@ export const changeStatusFavoriteOffer = createAsyncThunk<OfferCard, argChangeSt
   }
 );
 
-export const checkAuthAction = createAsyncThunk<void, undefined, {
+export const checkAuthAction = createAsyncThunk<UserData['email'], undefined, {
   dispatch: AppDispatch;
   state: State;
   extra: AxiosInstance;
 }>(
   'user/checkAuth',
   async (_arg, {extra: api}) => {
-    // try {
-    //   await api.get(APIRoute.Login);
-    //   dispatch(requireAuthorization(AuthorizationStatus.Auth));
-    // } catch {
-    //   dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
-    // }
-    await api.get(APIRoute.Login);
+    const { data: userData } = await api.get<UserData>(APIRoute.Login);
+    return userData.email;
   }
 );
 
@@ -173,7 +152,6 @@ export const loginAction = createAsyncThunk<UserData['email'], AuthData, {
   async ({email, password}, {dispatch, extra: api}) => {
     const {data: {token}} = await api.post<UserData>(APIRoute.Login, {email, password});
     setToken(token);
-    // dispatch(requireAuthorization(AuthorizationStatus.Auth));
     dispatch(redirectToRoute(AppRoute.Main));
 
     return email;
@@ -189,6 +167,5 @@ export const logoutAction = createAsyncThunk<void, undefined, {
   async (_arg, {extra: api}) => {
     await api.delete(APIRoute.Logout);
     dropToken();
-    // dispatch(requireAuthorization(AuthorizationStatus.NoAuth));
   }
 );

@@ -4,9 +4,9 @@ import {useAppSelector} from '../../hooks';
 import {groupOffersByCities} from '../../utils';
 import Header from '../../components/header/header';
 import { getFavoriteOffers, getFavoriteOffersLoadingStatus, getOffers } from '../../store/site-data/selectors';
-import LoginScreen from '../login-screen/login-screen';
 import CardLiEmpty from '../../components/card-list-empty/card-list-empty';
 import Logo from '../../components/logo/logo';
+import LoadingScreen from '../loading-screen/loading-screen';
 
 function FavoritesScreen (): JSX.Element {
 
@@ -16,12 +16,12 @@ function FavoritesScreen (): JSX.Element {
   const isFavoriteOffersLoading = useAppSelector(getFavoriteOffersLoadingStatus);
 
   if (isFavoriteOffersLoading) {
-    return <LoginScreen />;
+    return <LoadingScreen />;
   }
 
   return (
     <div className={`page ${isEmpty ? 'page--favorites-empty' : ''}`}>
-      
+
       <Header />
 
       <main className={`page__main page__main--favorites ${isEmpty ? 'page__main--favorites-empty' : ''}`}>
@@ -62,7 +62,7 @@ function FavoritesScreen (): JSX.Element {
       <footer className="footer container">
 
         <Logo place='footer' />
-        
+
       </footer>
     </div>
   );

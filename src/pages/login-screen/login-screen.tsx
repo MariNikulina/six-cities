@@ -35,7 +35,7 @@ function LoginScreen ():JSX.Element {
             <div className="header__left">
 
               <Logo />
-              
+
             </div>
           </div>
         </div>

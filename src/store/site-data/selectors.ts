@@ -8,7 +8,7 @@ import { getCity, getSorting } from '../site-process/selectors';
 
 export const getOffers = (state: State): OffersCard => state[NameSpace.SiteData].offers;
 
-export const getDetailedOffers = (state: State): OfferCard => state[NameSpace.SiteData].detailedOfferInfo!;
+export const getDetailedOffers = (state: State): OfferCard | null => state[NameSpace.SiteData].detailedOfferInfo!;
 
 export const getOffersNearby = (state: State): OffersCard => state[NameSpace.SiteData].offersNearby;
 

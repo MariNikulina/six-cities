@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Form from '../../components/form/form';
 import ReviewsList from '../../components/reviews-list/reviews-list';
 import Map from '../../components/map/map';
@@ -9,13 +11,46 @@ import {useAppDispatch, useAppSelector} from '../../hooks';
 import {getStarsWidth} from '../../utils';
 import {leaveComment} from '../../store/api-actions';
 import {NewReview} from '../../types/review';
-import LoginScreen from '../login-screen/login-screen';
 import { getComments, getCommentsLoadingStatus, getDetailedOffers, getDetailedOffersLoadingStatus, getOffersNearby, getOffersNearbyLoadingStatus } from '../../store/site-data/selectors';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import { getCity } from '../../store/site-process/selectors';
 import Bookmark from '../../components/bookmark/bookmark';
+import { fetchDetailedInfoAction, fetchOffersNearbyAction, fetchComments } from '../../store/api-actions';
+import LoadingScreen from '../loading-screen/loading-screen';
 
-function PropertyScreen (): JSX.Element {
+function PropertyScreen (): JSX.Element | null {
+
+  const params = useParams();
+  const detailedOffer = useAppSelector(getDetailedOffers);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const offersNearby = useAppSelector(getOffersNearby);
+  const comments = useAppSelector(getComments);
+  const city = useAppSelector(getCity);
+  const isDetailedOffersLoading = useAppSelector(getDetailedOffersLoadingStatus);
+  const isCommentsLoading = useAppSelector(getCommentsLoadingStatus);
+  const isOffersNearbyLoading = useAppSelector(getOffersNearbyLoadingStatus);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const { id } = params;
+    if (id) {
+      const parsedId = Number(id);
+      dispatch(fetchDetailedInfoAction(parsedId));
+      dispatch(fetchOffersNearbyAction(parsedId));
+      dispatch(fetchComments(parsedId));
+    }
+  }, [params, dispatch]);
+
+  if (isDetailedOffersLoading) {
+    return (
+      <LoadingScreen />
+    );
+  }
+
+  if (!detailedOffer) {
+    return null;
+  }
 
   const {
     images,
@@ -32,24 +67,7 @@ function PropertyScreen (): JSX.Element {
     id,
     location,
     isFavorite,
-  } = useAppSelector(getDetailedOffers);
-
-  // const {authorizationStatus, offersNearby, comments, city, activeOffer, isDetailedOffersLoading, isCommentsLoading, isOffersNearbyLoading} = useAppSelector((state) => state);
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const offersNearby = useAppSelector(getOffersNearby);
-  const comments = useAppSelector(getComments);
-  const city = useAppSelector(getCity);
-  const isDetailedOffersLoading = useAppSelector(getDetailedOffersLoadingStatus);
-  const isCommentsLoading = useAppSelector(getCommentsLoadingStatus);
-  const isOffersNearbyLoading = useAppSelector(getOffersNearbyLoadingStatus);
-
-  const dispatch = useAppDispatch();
-
-  if (isDetailedOffersLoading) {
-    return (
-      <LoginScreen />
-    );
-  }
+  } = detailedOffer;
 
   const locations = offersNearby.map(({id: nearbyId, location: nearbyLocation, }) => ({ id: nearbyId, ...nearbyLocation }));
   locations.push({id, ...location});
@@ -91,14 +109,9 @@ function PropertyScreen (): JSX.Element {
                 <h1 className="property__name">
                   {title}
                 </h1>
-                {/* <button className="property__bookmark-button button" type="button">
-                  <svg className="property__bookmark-icon" width="31" height="33">
-                    <use xlinkHref="#icon-bookmark"></use>
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button> */}
 
                 <Bookmark id={id} isActive={isFavorite} place='property'/>
+
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
@@ -163,7 +176,7 @@ function PropertyScreen (): JSX.Element {
                 <h2 className="reviews__title">Reviews &middot; <span className="reviews__amount">{comments.length}</span></h2>
 
                 {isCommentsLoading ?
-                  <LoginScreen /> :
+                  <LoadingScreen /> :
                   <ReviewsList reviews={comments}/>}
 
                 {authorizationStatus === AuthorizationStatus.Auth &&
@@ -181,7 +194,7 @@ function PropertyScreen (): JSX.Element {
             <h2 className="near-places__title">Other places in the neighbourhood</h2>
 
             {isOffersNearbyLoading ?
-              <LoginScreen /> :
+              <LoadingScreen /> :
               <OffersList listClassName={PropertyClassName} offers={offersNearby} />}
 
           </section>

@@ -3,13 +3,12 @@ import {MainClassNamesEnum, FavoriteClassNamesEnum, PropertyClassNameEnum} from 
 import {FavoritesClassName} from '../../const';
 import {useAppDispatch} from '../../hooks';
 import { setActiveOffer } from '../../store/site-process/site-process';
-import {fetchComments, fetchDetailedInfoAction, fetchOffersNearbyAction} from '../../store/api-actions';
+import { redirectToRoute } from '../../store/action';
+import { AppRoute } from '../../const';
 import {getStarsWidth} from '../../utils';
 import Bookmark from '../bookmark/bookmark';
 
 type OfferCardProps = {
-  // onMouseMove: (id: number) => void;
-  // onMouseLeave: () => void;
   offer: OfferCard;
   classNames: MainClassNamesEnum | FavoriteClassNamesEnum | PropertyClassNameEnum;
 }
@@ -28,12 +27,8 @@ function Card ({ offer, classNames = FavoritesClassName}: OfferCardProps): JSX.E
     dispatch(setActiveOffer(null));
   };
 
-  const handleTitleClick = async () => {
-    const resultDetailedInfoAction = await dispatch(fetchDetailedInfoAction(id));
-    if (fetchDetailedInfoAction.fulfilled.match(resultDetailedInfoAction)) {
-      dispatch(fetchOffersNearbyAction(id));
-      dispatch(fetchComments(id));
-    }
+  const handleTitleClick = () => {
+    dispatch(redirectToRoute(`${AppRoute.Room}/${id}`));
   };
 
 
@@ -41,7 +36,6 @@ function Card ({ offer, classNames = FavoritesClassName}: OfferCardProps): JSX.E
     <article
       className={`${classNames.Article}card place-card`}
       onMouseEnter={handleMouseMove}
-      // onMouseLeave={onMouseLeave}
       onMouseLeave={handleMouseLeave}
     >
       {isPremium && (
@@ -72,8 +66,7 @@ function Card ({ offer, classNames = FavoritesClassName}: OfferCardProps): JSX.E
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <h2 className="place-card__name" onClick={() => void handleTitleClick()}>
-          {/*<Link to={`${AppRoute.Room}/${id}`}>{title}</Link>*/}
+        <h2 className="place-card__name" onClick={handleTitleClick}>
           <a>{title}</a>
         </h2>
         <p className="place-card__type">{type}</p>

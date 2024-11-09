@@ -7,8 +7,6 @@ import NotFoundScreen from '../../pages/not-found-screen/not-found-screen';
 import PropertyScreen from '../../pages/property-screen/property-screen';
 import PrivateRoute from '../private-route/private-route';
 import Layout from '../layout/layout';
-import {Reviews} from '../../types/review';
-import {City, OffersCard} from '../../types/offers';
 import {useAppSelector} from '../../hooks';
 import {isCheckedAuth} from '../../utils';
 import LoadingScreen from '../../pages/loading-screen/loading-screen';
@@ -17,14 +15,7 @@ import browserHistory from '../../browser-history';
 import { getAuthorizationStatus } from '../../store/user-process/selectors';
 import { getOffersLoadingStatus } from '../../store/site-data/selectors';
 
-type AppScreenProps = {
-  offers: OffersCard;
-  reviews: Reviews;
-  city: City;
-};
-
-function App({offers, reviews, city}: AppScreenProps): JSX.Element {
-  // const {authorizationStatus, isOffersLoading} = useAppSelector((state) => state);
+function App(): JSX.Element {
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isOffersLoading = useAppSelector(getOffersLoadingStatus);
 

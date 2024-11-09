@@ -8,7 +8,7 @@ import { redirectToRoute } from '../../store/action';
 import Logo from '../logo/logo';
 
 function Header (): JSX.Element {
-  // const {authorizationStatus, user} = useAppSelector((state) => state);
+  
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const user = useAppSelector(getUser);
   const dispatch = useAppDispatch();
@@ -28,9 +28,9 @@ function Header (): JSX.Element {
       <div className="container">
         <div className="header__wrapper">
           <div className="header__left">
-            
+
             <Logo />
-            
+
           </div>
           <nav className="header__nav">
 

@@ -22,7 +22,7 @@ function Bookmark ({id, isActive, place = 'place-card'}: BookmarkProps): JSX.Ele
 
   return (
     <button
-      className={`${place}__bookmark-button ${isActive ? `${place}__bookmark-button--active` : ''} button`}
+      className={`${place}__bookmark-button ${isActive ? 'place-card__bookmark-button--active' : ''} button`}
       type="button"
       onClick={handleFavoriteButtonClick}
     >

@@ -7,7 +7,7 @@ import {CityName} from '../../types/offers';
 import { getCity } from '../../store/site-process/selectors';
 
 function CitiesList (): JSX.Element {
-  // const {city} = useAppSelector((state) => state)
+  
   const city = useAppSelector(getCity);
   const dispatch = useAppDispatch();
 

@@ -13,15 +13,10 @@ import CardLiEmpty from '../../components/card-list-empty/card-list-empty';
 
 function MainPageScreen (): JSX.Element {
 
-  // const { city, offers, sorting: activeSorting, activeOffer} = useAppSelector((state) => state);
   const city = useAppSelector(getCity);
-  // const offers = useAppSelector(getOffers);
   const activeSorting = useAppSelector(getSorting);
   const activeOffer = useAppSelector(getActiveOffers);
   const offers = useAppSelector(selectOffers);
-
-  // const filteredOffers = filterOffers(city.name, offers);
-  // const sortedOffers = filteredOffers.sort(Corparator[activeSorting]);
 
   const offersCount = offers.length;
   const isEmpty = offersCount === 0;
